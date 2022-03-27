@@ -1,0 +1,58 @@
+## Python
+*.pyc
+
+## Various / User settings 
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+*.xcuserstate
+*.xcbkptlist
+xcuserdata/
+xcshareddata/WorkspaceSettings.xcsettings
+
+## Build generated
+archive
+DerivedData
+
+## Swift Package
+.build/
+
+## Gemfile
+vendor/
+
+## XcodeGenrugby
+Modules/**/*.pbxproj
+Modules/**/*.xcscheme
+!Modules/Pinkoi/.swiftpm/xcode/xcshareddata/xcschemes/*.xcscheme
+
+## CocoaPods
+Pods/
+*.xcworkspace
+
+## Rugby
+.rugby/
+
+## Other
+.DS_Store
+*.mobileprovision
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
+
+## fastlane
+fastlane/README.md
+fastlane/report.xml
+fastlane/FastlaneRunner
+test_output/
+
+## Obj-C/Swift specific
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
