@@ -1,6 +1,6 @@
 //
 //  LeetCodeTests_7.swift
-//  
+//
 
 import XCTest
 
@@ -12,6 +12,8 @@ import XCTest
 /// Input: preorder = [3, 9, 20, 15, 7], inorder = [9, 3, 15, 20, 7]
 /// Output: [3, 9, 20, null, null, 15, 7]
 ///
+/// 前序遍歷性質： 節點按照 [ 根節點 | 左子樹 | 右子樹 ] 排序。
+/// 中序遍歷性質： 節點按照 [ 左子樹 | 根節點 | 右子樹 ] 排序。
 public class TreeNode: CustomStringConvertible {
     public var val: Int
     public var left: TreeNode?
@@ -23,62 +25,32 @@ public class TreeNode: CustomStringConvertible {
     }
     
     public var description: String {
-        return "value: \(val), left: \(left), right: \(right)\n"
+        return "value: \(val), left: \(String(describing: left)), right: \(String(describing: right))\n"
     }
 }
 
 class Solution {
-    /// preorder 中左右
-    /// inorder 左中右
-    /// Input: preorder = [3, 9, 20, 15, 7], inorder = [9, 3, 15, 20, 7] lv1
-    /// Input: preorder = [9, 20, 15, 7], inorder = [9] lv2
-    /// Input: preorder = [20, 15, 7], inorder = [15, 20, 7] lv2
-    /// Input: preorder = [20, 15, 7], inorder = [] lv3
-    /// Input: preorder = [20, 15, 7], inorder = [] lv3
-    /// Input: preorder = [20, 15, 7], inorder = [15, 20, 7] lv2
-    /// Input: preorder = [15, 7], inorder = [15] lv3
-    /// Input: preorder = [7], inorder = [7] lv3
-    ///
-    /// Output: [3, 9, 20, null, null, 15, 7]
-    ///
-    ///
-    /// Input: preorder = [3, 9, 20, 7, 15], inorder = [9, 3, 20, 7, 15] lv1
-    /// Input: preorder = [9, 20, 7, 15], inorder = [9] lv2
-    /// Input: preorder = [20, 7, 15], inorder = [20, 7, 15] lv2
-    /// Input: preorder = [7, 15], inorder = [] lv3
-    /// Input: preorder = [7, 15], inorder = [7, 15] lv3
-    /// Input: preorder = [15], inorder = [] lv4
-    /// Input: preorder = [15], inorder = [15] lv4
-    func next(_ preorder: [Int], _ inorder: [Int]) -> TreeNode? {
+
+    func buildTree(_ preorder: [Int], _ inorder: [Int]) -> TreeNode? {
+        if preorder.isEmpty { return nil }
         let node = TreeNode(preorder[0])
         if inorder.count == 1 {
             return node
         }
-        
-        guard let inorderStartIndex: Int = inorder.firstIndex(where: { $0 == node.val }) else {
-            return nil
-        }
-    
-        let newPreorder = Array(preorder.dropFirst())
-        let leftArray: [Int] = Array(inorder[0..<inorderStartIndex])
-        let rightArray: [Int] = {
-            if inorderStartIndex == preorder.count {
-                return []
-            } else {
-                return Array(inorder[inorderStartIndex+1..<preorder.count])
-            }
-        }()
-        node.left = next(newPreorder, leftArray)
-        node.right = next(newPreorder, rightArray)
+        guard let inorderStartIndex: Int = inorder.firstIndex(where: { $0 == node.val }) else { return nil }
+        let inLeft: [Int] = Array(inorder[0 ..< inorderStartIndex])
+        let inRight: [Int] = Array(inorder[max(inorderStartIndex + 1, 0) ..< preorder.count])
+            
+        let preLeft: [Int] = Array(preorder[1 ... max(inorderStartIndex, 1)])
+        let preRight: [Int] = Array(preorder[max(inorderStartIndex + 1, 0) ..< preorder.endIndex])
+            
+        node.left = buildTree(preLeft, inLeft)
+        node.right = buildTree(preRight, inRight)
         return node
-    }
-    
-    func buildTree(_ preorder: [Int], _ inorder: [Int]) -> TreeNode? {
-        var preorder = preorder
-        return next(preorder, inorder)
     }
 }
 
+/// Only print, not assert
 final class LeetCodeTests_7: XCTestCase {
     
     override func setUp() {
@@ -87,16 +59,21 @@ final class LeetCodeTests_7: XCTestCase {
 
     func test_1() {
         let solution = Solution()
-        print(solution.buildTree([3,9,20,15,7], [9,3,15,20,7]))
+        print(solution.buildTree([3, 9, 20, 15, 7], [9, 3, 15, 20, 7]) ?? [])
     }
     
     func test_2() {
         let solution = Solution()
-        print(solution.buildTree([3,9,20,7,15], [9,3,20,7,15]))
+        print(solution.buildTree([3, 9, 20, 7, 15], [9, 3, 20, 7, 15]) ?? [])
     }
     
     func test_3() {
         let solution = Solution()
-        print(solution.buildTree([3,9,20,15,7], [9,3,20,15,7]))
+        print(solution.buildTree([3, 9, 20, 15, 7], [9, 3, 20, 15, 7]) ?? [])
+    }
+    
+    func test_4() {
+        let solution = Solution()
+        print(solution.buildTree([3, 9, 10, 20, 15, 7], [10, 9, 3, 20, 15, 7]) ?? [])
     }
 }
