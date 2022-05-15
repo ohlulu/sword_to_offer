@@ -19,7 +19,7 @@ import XCTest
 
 
 /// Only print, not assert
-final class LeetCodeTests_9: XCTestCase {
+final class LeetCodeTests_10_1: XCTestCase {
     
     class Solution {
         
